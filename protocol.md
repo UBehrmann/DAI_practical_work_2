@@ -1,43 +1,10 @@
 # Application protocol
 
-## Introduction
+The goal of the protocol is to establish clear communication between the client and the server by defining the messages, actions, and commands they can exchange. It addresses the problem of standardizing these interactions to ensure seamless and efficient communication. The application protocol serves as the framework for specifying these interactions and facilitating the exchange of information between the client and the server.
 
-Section 1 - Overview
+The transport protocol used is TCP, with the server listening on port 2001. Messages and actions are encoded in text to keep the communication simple, with each message/action delimited by a newline character. All interactions are treated as text. The client is responsible for initiating the communication, while the server handles closing it. In case of an unknown message, action, or exception, the server responds with an error message to the client.
 
-This section defines the purpose of the protocol:
-
-    What is the goal of the protocol?
-    What is the problem that it tries to solve?
-    What the application protocol is used for?
-
-Section 2 - Transport protocol
-
-This section defines the transport protocol used by the application protocol:
-
-    What protocol(s) is/are involved? On which port(s)?
-    How are messages/actions encoded?
-    How are messages/actions delimited?
-    How are messages/actions treated (text or binary)?
-    Who initiates/closes the communication?
-    What happens on an unknown message/action/exception?
-
-Section 3 - Messages
-
-This section defines the messages that can be exchanged between the client and the server.
-
-    What are the messages/actions?
-    What are the parameters?
-    What are the return values?
-    What are the exceptions?
-
-
-- The application protocol defines the overview of the network application
-- The application protocol defines the transport protocol(s) the network application uses
-- The application protocol defines the available messages/actions/commands for the client/server to communicate
-- The application protocol defines the success/error codes and their explanations
-- The application protocol is described using successful and unsuccessful examples with one or multiple diagrams
-
-## Commands
+## Messages
 
 - [CREATE_USER](#create_user)
 - [CONNECT](#connect)
@@ -52,7 +19,7 @@ This section defines the messages that can be exchanged between the client and t
 
 ### CREATE_USER
 
-Asks the server to create a new user.
+Asks the server to create a new user. The user must provide a name and a password.
 
 #### request
 
@@ -69,7 +36,7 @@ CREATE_USER <name> <password>
 
 ### CONNECT
 
-Asks the server to connect the client.
+Asks the server to connect the client. The client must provide a name and a password.
 
 #### request
 
@@ -86,7 +53,7 @@ CONNECT <name> <password>
 
 ### SET_NAME
 
-Asks the server to set the name of the client.
+Asks the server to set the name of the client. The client must provide a name.
 
 #### request
 
@@ -103,7 +70,7 @@ SET_NAME <name>
 
 ### SET_PASSWORD
 
-Asks the server to set the password of the client.
+Asks the server to set the password of the client. The client must provide the old password and the new password.
 
 #### request
 
@@ -120,7 +87,7 @@ SET_PASSWORD <old_password> <password>
 
 ### GET_NAMES
 
-Asks the server to get the list of all the names of the users in a room.
+Asks the server to get the list of all the names of the users in a room. The client must provide the name of the room.
 
 #### request
 
@@ -172,7 +139,9 @@ CONNECT_TO_ROOM <room name> <password>
 
 ### CREATE_ROOM
 
-Asks the server to create a new room.
+Asks the server to create a new room. The client must provide a name and a password.
+
+If no password is provided, the room is created without a password.
 
 #### request
 
@@ -190,6 +159,8 @@ CREATE_ROOM <room name> <password>
 ### GET_MESSAGES
 
 Asks the server to get the list of all the messages in a room. If the room needs a password, the client must provide it.
+
+We decide to add the password to the request because otherwise someone could get the messages of a room without being connected to it.
 
 #### request
 
