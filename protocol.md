@@ -85,14 +85,14 @@ SET_PASSWORD <name> <password> <newPassword>
   an integer between 1 and 1 inclusive. The error code is as follow:
   - `1` - the password cannot be empty
 
-### GET_NAMES
+### GET_USER_NAMES
 
 Asks the server to get the list of all the names of the users in a room. The client must provide the name of the room.
 
 #### request
 
 ```text
-GET_NAMES <roomName>
+GET_USER_NAMES <applicantName> <roomName>
 ```
 
 #### response
@@ -102,14 +102,14 @@ GET_NAMES <roomName>
   an integer between 1 and 1 inclusive. The error code is as follow:
   - `1` - the room does not exist
 
-### GET_ROOMS
+### GET_ROOM_NAMES
 
 Asks the server to get the list of all the rooms.
 
 #### request
 
 ```text
-GET_ROOMS
+GET_ROOM_NAMES <applicantName>
 ```
 
 #### response

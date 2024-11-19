@@ -8,7 +8,8 @@ import ch.heigvd.dai.commands.Command;
 
 import java.io.BufferedWriter;
 import java.util.Map;
-
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 public class CreateRoom implements Command {
@@ -36,8 +37,25 @@ public class CreateRoom implements Command {
             return "ERROR 4 -Room name already taken"; // Room name already taken
         }
 
-        rooms.put(roomName, new Room(roomName, roomPassword));
-        rooms.get(roomName).addUser(users.get(creatorName));
+        // Écrire dans rooms_names.txt
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("rooms_names.txt", true))) {
+            writer.write(roomName + " " + roomPassword);
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "ERROR 5 - Unable to write to rooms file";
+        }
+
+        // Créer le fichier nomSalle.txt
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(roomName + "_admin" + ".txt"))) {
+            writer.write(creatorName); // Ajouter le créateur comme premier utilisateur
+            writer.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "ERROR 6 - Unable to create room file";
+        }
+
+        rooms.put(roomName, new Room(roomName, roomPassword, users.get(creatorName)));
         return "OK";
     }
 }

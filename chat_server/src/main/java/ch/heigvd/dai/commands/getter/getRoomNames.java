@@ -1,4 +1,4 @@
-package ch.heigvd.dai.commands.connect;
+package ch.heigvd.dai.commands.getter;
 
 import ch.heigvd.dai.Managers.RoomManager;
 import ch.heigvd.dai.Managers.UserManager;
@@ -9,42 +9,39 @@ import ch.heigvd.dai.commands.Command;
 import java.io.BufferedWriter;
 import java.util.Map;
 
-
-
-public class ConnectToRoom implements Command {
+public class getRoomNames implements Command {
     @Override
     public String execute(String[] args, BufferedWriter out) {
-        if (args.length < 4) {
+        if (args.length < 2) {
             return "ERROR 1 -Missing arguments"; // Missing arguments
         }
 
         String username = args[1];
-        String roomName = args[2];
-        String password = args[3];
 
+        // Récupère les utilisateurs
         Map<String, User> users = UserManager.getUsers();
+
+        //Si pas un user connu alors erreur
         if (!users.containsKey(username)) {
             return "ERROR 2 -User name dosen't exist"; // User name dosen't exist
         }
 
+        //Si pas en ligne alors erreur
         if(!users.get(username).isOnline()){
             return "ERROR 3 -User isn't connect"; // User isn't connect
         }
 
+        // Récupère les salles
         Map<String, Room> rooms = RoomManager.getRooms();
-        if (!rooms.containsKey(roomName)) {
-            return "ERROR 4 -Room name dosen't existe"; // Room name dosen't existe
+
+        // Construit la réponse avec un StringBuilder
+        StringBuilder result = new StringBuilder("OK ");
+        for (String roomName : rooms.keySet()) {
+            result.append(roomName).append(" ");
         }
 
-        if(!rooms.get(roomName).getPassword().equals(password)){
-            return "ERROR 5 -Wrong password"; //Wrong password
-        }
-
-        if(users.get(username) == rooms.get(roomName).getAdmin()) return "OK";
-        for(User user : rooms.get(roomName).getUsers()){
-            if(users.get(username) == user) return "OK";
-        }
-        rooms.get(roomName).addUser(users.get(username));
-        return "OK";
+        // Retourne la réponse en supprimant l'espace final
+        return result.toString().trim();
     }
 }
+

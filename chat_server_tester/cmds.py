@@ -52,23 +52,40 @@ cmds_users_connect_to_room_test =[
     "CONNECT_TO_ROOM user2 myRoom pwRm",
 ]
 
+# USERS     : user1, user2, user3, user4
+# ONLINE    : user1, user2
+# ROOMS     :  myRoom (pwRm) -> user1, user2
+cmds_users_get_room_names_test =[
+    "CONNECT_TO_SERVER user3 pw3",
 
-commands = [
-    "CREATE_ROOM room1 password123",  # Création d'une salle avec mot de passe
-    "CREATE_ROOM room2",  # Création d'une salle sans mot de passe
+    "CREATE_ROOM user3 myPrivateRoom pwPvRm",
+    "CONNECT_TO_ROOM user4 myPrivateRoom pwPvR",
 
-    "CONNECT_TO_ROOM user1 room1 password123",  # Connexion à une salle avec mot de passe
-    "CONNECT_TO_ROOM user2 room2",  # Connexion à une salle sans mot de passe
+    "GET_ROOM_NAMES user12312",
+    "GET_ROOM_NAMES user4",
 
-    "CONNECT_TO_ROOM user1 room1 fauxMotDePasse",  # Connexion avec mot de passe incorrect
-    "CONNECT_TO_ROOM user2 room3",  # Connexion à une salle inexistante
+    "CONNECT_TO_SERVER user4 pw4",
+    "GET_ROOM_NAMES user4"
+]
 
+# USERS     :   user1, user2, user3, user4
+# ONLINE    :   user1, user2, user3, user4
+# ROOMS     :   myRoom (pwRm) -> user1, user2
+#               myPrivateRoom (pwPvRm) -> user3
+cmds_users_get_users_names_test =[
+    "CREATE_USER user5 pw5",  # Création d'utilisateur
 
+    "GET_USER_NAMES user5",
+    "GET_USER_NAMES user5 myRoom",
 
-    "GET_NAMES room1",  # Liste des utilisateurs dans une salle
-    "GET_NAMES room3",  # Salle inexistante
+    "CONNECT_TO_SERVER user5 pw5",
+    "GET_USER_NAMES user5 myRoom2",
 
-    "GET_ROOMS",  # Liste des salles disponibles
+    "GET_USER_NAMES user5 myRoom",
+    "GET_USER_NAMES user5 myPrivateRoom",
 
-    "UNKNOWN_COMMAND",  # Commande non valide pour tester les erreurs
+    "CONNECT_TO_ROOM user5 myPrivateRoom pwPvRm",
+    "CONNECT_TO_ROOM user4 myPrivateRoom pwPvRm",
+    "GET_USER_NAMES user5 myPrivateRoom",
+
 ]
