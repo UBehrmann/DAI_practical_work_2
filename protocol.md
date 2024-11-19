@@ -34,14 +34,14 @@ CREATE_USER <name> <password>
   an integer between 1 and 1 inclusive. The error code is as follow:
   - `1` - the name is already taken
 
-### CONNECT
+### CONNECT_TO_SERVER
 
 Asks the server to connect the client. The client must provide a name and a password.
 
 #### request
 
 ```text
-CONNECT <name> <password>
+CONNECT_TO_SERVER <name> <password>
 ```
 
 #### response
@@ -58,7 +58,7 @@ Asks the server to set the name of the client. The client must provide a name.
 #### request
 
 ```text
-SET_NAME <name>
+SET_NAME <name> <password> <newName>
 ```
 
 #### response
@@ -75,7 +75,7 @@ Asks the server to set the password of the client. The client must provide the o
 #### request
 
 ```text
-SET_PASSWORD <old_password> <password>
+SET_PASSWORD <name> <password> <newPassword>
 ```
 
 #### response
@@ -92,7 +92,7 @@ Asks the server to get the list of all the names of the users in a room. The cli
 #### request
 
 ```text
-GET_NAMES <room name>
+GET_NAMES <roomName>
 ```
 
 #### response
@@ -126,7 +126,7 @@ Asks the server to connect the client to a room. If the room needs a password, t
 #### request
 
 ```text
-CONNECT_TO_ROOM <room name> <password>
+CONNECT_TO_ROOM <userName> <roomName> <password>
 ```
 
 #### response
@@ -146,7 +146,7 @@ If no password is provided, the room is created without a password.
 #### request
 
 ```text
-CREATE_ROOM <room name> <password>
+CREATE_ROOM <creatorName> <roomName> <roomPassword>
 ```
 
 #### response

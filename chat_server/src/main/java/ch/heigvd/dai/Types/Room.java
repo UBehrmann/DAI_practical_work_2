@@ -6,7 +6,7 @@ import java.util.Set;
 public class Room {
     private final String name;
     private final String password;
-    private final Set<String> clients = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
 
     public Room(String name, String password) {
         this.name = name;
@@ -17,11 +17,19 @@ public class Room {
         return this.password == null || this.password.equals(password);
     }
 
-    public void addClient(String clientId) {
-        clients.add(clientId);
+    public void addUser(User userName) {
+        this.users.add(userName);
     }
 
-    public Set<String> getClients() {
-        return clients;
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
