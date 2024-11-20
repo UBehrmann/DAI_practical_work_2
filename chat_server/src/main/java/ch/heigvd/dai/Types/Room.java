@@ -1,6 +1,7 @@
 package ch.heigvd.dai.Types;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,12 +12,21 @@ public class Room {
     private final String name;
     private final String password;
     private final User admin;
-    private CopyOnWriteArraySet<User> users = new CopyOnWriteArraySet<>();
+    private Set<User> users = new LinkedHashSet<>();
+
+    private Set<Message> messages = new LinkedHashSet<>();
 
     public Room(String name, String password, User admin) {
         this.name = name;
         this.password = password;
         this.admin = admin;
+
+        addMessage(new Message(this.admin, "---Création du room : " + this.name));
+        addMessage(new Message(this.admin, "---Admin du room : " + this.admin.getName()));
+    }
+
+    public void addMessage(Message message){
+        this.messages.add(message); // Ajoute le Message au Set
     }
 
     public boolean isPasswordCorrect(String password) {
@@ -25,6 +35,7 @@ public class Room {
 
     public void addUser(User user) {
         this.users.add(user);
+        addMessage(new Message(user, "---Arrivée membre : " + user.getName()));
     }
 
     public boolean isUserInRoom(User user) {
@@ -47,6 +58,7 @@ public class Room {
     public void removeUser(User user) {
         if (!users.contains(user)) return;
 
+        addMessage(new Message(user, "---Départ membre : " + user.getName()));
         users.remove(user);
     }
 
