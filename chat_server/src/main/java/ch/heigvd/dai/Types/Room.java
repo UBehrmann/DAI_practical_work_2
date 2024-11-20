@@ -5,12 +5,13 @@ import java.util.Set;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class Room {
     private final String name;
     private final String password;
     private final User admin;
-    private final Set<User> users = new HashSet<>();
+    private CopyOnWriteArraySet<User> users = new CopyOnWriteArraySet<>();
 
     public Room(String name, String password, User admin) {
         this.name = name;
@@ -23,23 +24,11 @@ public class Room {
     }
 
     public void addUser(User user) {
-        // Ajouter l'utilisateur dans le fichier nomRoom_users.txt
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(name + "_users.txt", true))) {
-            writer.write(user.getName());
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace(); // Affiche les erreurs en cas de problème d'écriture
-        }
-
         this.users.add(user);
     }
 
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public User getAdmin() {
-        return admin;
+    public boolean isUserInRoom(User user) {
+        return this.admin.equals(user) || this.users.contains(user);
     }
 
     public String getName() {
@@ -48,5 +37,20 @@ public class Room {
 
     public String getPassword() {
         return password;
+    }
+
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void removeUser(User user) {
+        if (!users.contains(user)) return;
+
+        users.remove(user);
+    }
+
+    public User getAdmin() {
+        return admin;
     }
 }

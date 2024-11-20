@@ -1,5 +1,6 @@
 package ch.heigvd.dai.commands.create;
 
+import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.RoomManager;
 import ch.heigvd.dai.Managers.UserManager;
 import ch.heigvd.dai.Types.Room;
@@ -16,7 +17,7 @@ public class CreateRoom implements Command {
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 4) {
-            return "ERROR 1 -Missing arguments"; // Missing arguments
+            return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
 
         String creatorName  = args[1];
@@ -25,37 +26,21 @@ public class CreateRoom implements Command {
 
         Map<String, User> users = UserManager.getUsers();
         if (!users.containsKey(creatorName)) {
-            return "ERROR 2 -User name dosen't exist"; // User name dosen't exist
+            return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
         if(!users.get(creatorName).isOnline()){
-            return "ERROR 3 -User isn't connect"; // User isn't connect
+            return ErrorCodes.USER_NOT_CONNECTED.getMessage();
         }
 
         Map<String, Room> rooms = RoomManager.getRooms();
         if (rooms.containsKey(roomName)) {
-            return "ERROR 4 -Room name already taken"; // Room name already taken
+            return ErrorCodes.ROOM_ALREADY_EXISTS.getMessage();
         }
 
-        // Écrire dans rooms_names.txt
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("rooms_names.txt", true))) {
-            writer.write(roomName + " " + roomPassword);
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "ERROR 5 - Unable to write to rooms file";
+        if(!RoomManager.addRoom(new Room(roomName, roomPassword, users.get(creatorName)))){
+            return ErrorCodes.STORAGE_FAILED.getMessage();
         }
-
-        // Créer le fichier nomSalle.txt
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(roomName + "_admin" + ".txt"))) {
-            writer.write(creatorName); // Ajouter le créateur comme premier utilisateur
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "ERROR 6 - Unable to create room file";
-        }
-
-        rooms.put(roomName, new Room(roomName, roomPassword, users.get(creatorName)));
         return "OK";
     }
 }

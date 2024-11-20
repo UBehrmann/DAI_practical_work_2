@@ -1,5 +1,6 @@
 package ch.heigvd.dai.commands.connect;
 
+import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.RoomManager;
 import ch.heigvd.dai.Managers.UserManager;
 import ch.heigvd.dai.Types.Room;
@@ -15,36 +16,39 @@ public class ConnectToRoom implements Command {
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 4) {
-            return "ERROR 1 -Missing arguments"; // Missing arguments
+            return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
 
-        String username = args[1];
+        String userName = args[1];
         String roomName = args[2];
         String password = args[3];
 
         Map<String, User> users = UserManager.getUsers();
-        if (!users.containsKey(username)) {
-            return "ERROR 2 -User name dosen't exist"; // User name dosen't exist
+        if (!users.containsKey(userName)) {
+            return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
-        if(!users.get(username).isOnline()){
-            return "ERROR 3 -User isn't connect"; // User isn't connect
+        if(!users.get(userName).isOnline()){
+            return ErrorCodes.USER_NOT_CONNECTED.getMessage();
         }
 
         Map<String, Room> rooms = RoomManager.getRooms();
         if (!rooms.containsKey(roomName)) {
-            return "ERROR 4 -Room name dosen't existe"; // Room name dosen't existe
+            return ErrorCodes.ROOM_NOT_FOUND.getMessage();
         }
 
-        if(!rooms.get(roomName).getPassword().equals(password)){
-            return "ERROR 5 -Wrong password"; //Wrong password
+        if(!rooms.get(roomName).isPasswordCorrect(password)){
+            return ErrorCodes.PASSWORD_WRONG.getMessage();
         }
 
-        if(users.get(username) == rooms.get(roomName).getAdmin()) return "OK";
-        for(User user : rooms.get(roomName).getUsers()){
-            if(users.get(username) == user) return "OK";
+        if(rooms.get(roomName).isUserInRoom(users.get(userName))){
+            return "OK";
         }
-        rooms.get(roomName).addUser(users.get(username));
+
+        if(!RoomManager.addUserInRoom(rooms.get(roomName), users.get(userName))) {
+            return ErrorCodes.STORAGE_FAILED.getMessage();
+        }
+
         return "OK";
     }
 }

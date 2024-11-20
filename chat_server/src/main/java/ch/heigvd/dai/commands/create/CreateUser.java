@@ -1,5 +1,6 @@
 package ch.heigvd.dai.commands.create;
 
+import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.UserManager;
 import ch.heigvd.dai.Types.User;
 import ch.heigvd.dai.commands.Command;
@@ -13,26 +14,20 @@ public class CreateUser implements Command {
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 3) {
-            return "ERROR 1 -Missing arguments"; // Missing arguments
+            return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
 
         String userName = args[1];
-        String password = args.length > 2 ? args[2] : null;
+        String password = args[2];
 
         Map<String, User> users = UserManager.getUsers();
         if (users.containsKey(userName)) {
-            return "ERROR 2 -User name already taken"; // User name already taken
+            return ErrorCodes.USER_ALREADY_EXISTS.getMessage();
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt", true))) {
-            writer.write(userName + " " + password);
-            writer.newLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "ERROR 3 - Unable to write to users file";
+        if(!UserManager.addUser(new User(userName, password))){
+            return ErrorCodes.STORAGE_FAILED.getMessage();
         }
-
-        users.put(userName, new User(userName, password));
         return "OK";
     }
 }

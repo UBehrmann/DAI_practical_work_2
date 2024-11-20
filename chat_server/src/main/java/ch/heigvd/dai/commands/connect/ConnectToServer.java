@@ -1,5 +1,6 @@
 package ch.heigvd.dai.commands.connect;
 
+import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.RoomManager;
 import ch.heigvd.dai.Managers.UserManager;
 import ch.heigvd.dai.Types.Room;
@@ -13,7 +14,7 @@ public class ConnectToServer implements Command {
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 3) {
-            return "ERROR 1 -Missing arguments"; // Missing arguments
+            return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
 
         String userName = args[1];
@@ -22,11 +23,11 @@ public class ConnectToServer implements Command {
         Map<String, User> users = UserManager.getUsers();
 
         if (!users.containsKey(userName)) {
-            return "ERROR 2 -User name dosen't exist"; //User name dosen't exist
+            return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
-        if(!users.get(userName).getPassword().equals(password)){
-            return "ERROR 3 -Wrong password"; //Wrong password
+        if(!users.get(userName).isPasswordCorrect(password)){
+            return ErrorCodes.PASSWORD_WRONG.getMessage();
         }
 
         users.get(userName).setOnline(true);
