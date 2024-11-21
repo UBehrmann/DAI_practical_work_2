@@ -6,7 +6,7 @@ import java.util.Set;
 public class Room {
     private final String name;
     private final String password;
-    private final User admin;
+    private User admin;
     private Set<User> users = new LinkedHashSet<>();
 
     private Set<Message> messages = new LinkedHashSet<>();
@@ -15,9 +15,13 @@ public class Room {
         this.name = name;
         this.password = password;
         this.admin = admin;
-
-        pushMessage(new Message(this.admin, "---Création du room : " + this.name));
-        pushMessage(new Message(this.admin, "---Admin du room : " + this.admin.getName()));
+    }
+    public Room(Room other){
+        this.name = other.name;
+        this.password = other.password;
+        this.admin = other.admin;
+        this.users = other.users;
+        this.messages = other.messages;
     }
 
     public void pushMessage(Message message){
@@ -32,9 +36,12 @@ public class Room {
         return this.password == null || this.password.equals(password);
     }
 
-    public void addUser(User user) {
-        this.users.add(user);
-        pushMessage(new Message(user, "---Arrivée membre : " + user.getName()));
+    public boolean addUser(User user) {
+        if (users.contains(user)) {
+            return false; // L'utilisateur est déjà présent
+        }
+        users.add(user);
+        return true;
     }
 
     public boolean isUserInRoom(User user) {
@@ -54,14 +61,20 @@ public class Room {
         return users;
     }
 
-    public void removeUser(User user) {
-        if (!users.contains(user)) return;
-
+    public boolean removeUser(User user) {
+        if (!users.contains(user)) {
+            return false; // L'utilisateur n'est pas dans la salle
+        }
         pushMessage(new Message(user, "---Départ membre : " + user.getName()));
         users.remove(user);
+        return true;
     }
+
 
     public User getAdmin() {
         return admin;
+    }
+    public void setAdmin(User user) {
+        admin = user;
     }
 }

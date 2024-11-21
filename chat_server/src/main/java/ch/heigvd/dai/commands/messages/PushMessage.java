@@ -40,12 +40,15 @@ public class PushMessage implements Command {
             return ErrorCodes.USER_NOT_CONNECTED_TO_ROOM.getMessage();
         }
 
-        // Construit du message avec un StringBuilder
+        // Construire le contenu du message à partir des arguments
         StringBuilder content = new StringBuilder();
-        for(int i = 3; i < args.length; i++){
+        for (int i = 3; i < args.length; i++) {
             content.append(args[i]).append(" ");
         }
-        rooms.get(roomName).pushMessage(new Message(users.get(userName), content.toString().trim()));
+
+        if(!RoomManager.pushMessageToRoom(roomName, new Message(users.get(userName), content.toString().trim()))){
+            return ErrorCodes.STORAGE_FAILED.getMessage();
+        }
         return "OK";
     }
 }

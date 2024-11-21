@@ -1,70 +1,62 @@
 package ch.heigvd.dai.Managers;
 
-import ch.heigvd.dai.Types.Room;
 import ch.heigvd.dai.Types.User;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserManager {
-    // Centralise les salles
+    //---------------------------------------------------------------------------------------------
+    //      ATTRIBUTS
+    //---------------------------------------------------------------------------------------------
     private static final Map<String, User> users = new ConcurrentHashMap<>();
+    private static final UserPersistenceManager persistenceManager = new UserPersistenceManager();
 
+
+    //---------------------------------------------------------------------------------------------
+    //      USER
+    //---------------------------------------------------------------------------------------------
     public static synchronized boolean addUser(User user) {
-        if (storeUserToFile(user)) {
+        if (users.containsKey(user.getName())) return false;
+        if (persistenceManager.saveUser(user)) {
             users.put(user.getName(), user);
             return true;
         }
         return false;
     }
-
-    public static synchronized boolean storeUserToFile(User user) {
-        List<String> lines = new ArrayList<>();
-        lines.add(user.getName() + " " + user.getPassword());
-        return FileManager.saveToFile("users.txt", lines, true); // true = append
+    public static synchronized boolean removeUser(User user) {
+        if (!users.containsKey(user.getName())) return false;
+        users.remove(user.getName());
+        return persistenceManager.deleteUser(user.getName());
+    }
+    public static synchronized boolean updateUserName(User user, String newUserName) {
+        if (users.containsKey(newUserName)) return false;
+        users.remove(user.getName());
+        if(!persistenceManager.deleteUser(user.getName())) return false;
+        user.setName(newUserName);
+        users.put(newUserName, user);
+        return persistenceManager.saveUser(user);
+    }
+    public static synchronized boolean updateUserPassword(User user, String newPassword) {
+        if (!users.containsKey(user.getName())) return false;
+        users.remove(user.getName());
+        if(!persistenceManager.deleteUser(user.getName())) return false;
+        user.setPassword(newPassword);
+        users.put(user.getName(), user);
+        return persistenceManager.saveUser(user);
     }
 
-    public static synchronized boolean loadUsers() {
-        List<String> lines = FileManager.loadFromFile("users.txt");
-        if (lines.isEmpty()) {
-            return false;
-        }
 
-        for (String line : lines) {
-            String[] parts = line.split(" ");
-            if (parts.length == 2) {
-                String userName = parts[0];
-                String userPassword = parts[1];
-                if (!userName.isEmpty() && !userPassword.isEmpty()) {
-                    users.put(userName, new User(userName, userPassword));
-                }
-            }
-        }
-        return true;
+    //---------------------------------------------------------------------------------------------
+    //      USERS
+    //---------------------------------------------------------------------------------------------
+    public static synchronized boolean loadUsers() {
+        users.clear();
+        persistenceManager.loadAllUsers().forEach(user -> users.put(user.getName(), user));
+        return !users.isEmpty(); // Retourne true si des utilisateurs ont été chargés
     }
 
     public static Map<String, User> getUsers() {
         return users;
-    }
-
-    public static synchronized boolean removeUser(User user) {
-        if (!users.containsKey(user.getName())) return false;
-
-        // Supprime l'utilisateur de la mémoire
-        users.remove(user.getName());
-
-        // Met à jour le fichier users.txt
-        List<String> lines = FileManager.loadFromFile("users.txt");
-        List<String> updatedLines = new ArrayList<>();
-        for (String line : lines) {
-            if (!line.startsWith(user.getName() + " ")) {
-                updatedLines.add(line);
-            }
-        }
-
-        return FileManager.saveToFile("users.txt", updatedLines, false); // Écrase le fichier
     }
 }

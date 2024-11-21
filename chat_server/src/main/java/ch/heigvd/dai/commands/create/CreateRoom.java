@@ -3,6 +3,7 @@ package ch.heigvd.dai.commands.create;
 import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.RoomManager;
 import ch.heigvd.dai.Managers.UserManager;
+import ch.heigvd.dai.Types.Message;
 import ch.heigvd.dai.Types.Room;
 import ch.heigvd.dai.Types.User;
 import ch.heigvd.dai.commands.Command;
@@ -41,6 +42,9 @@ public class CreateRoom implements Command {
         if(!RoomManager.addRoom(new Room(roomName, roomPassword, users.get(creatorName)))){
             return ErrorCodes.STORAGE_FAILED.getMessage();
         }
+
+        RoomManager.pushMessageToRoom(roomName, new Message(users.get(creatorName), "---Création du room : " + roomName));
+        RoomManager.pushMessageToRoom(roomName, new Message(users.get(creatorName), "---Admin du room : " + creatorName));
         return "OK";
     }
 }

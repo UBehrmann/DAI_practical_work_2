@@ -19,8 +19,7 @@ public class Main {
 
     public static void main(String[] args) {
         //loadDatas();
-
-        //printData();
+        //printDataLoaded();
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("[" + SERVER_NAME + " - " + SERVER_ID + "] starting with id " + SERVER_ID);
@@ -39,7 +38,7 @@ public class Main {
     }
 
 
-    public static void loadDatas(){
+    public static void loadDatas() {
         System.out.println("------LOAD-DATA------");
 
         // Charger les utilisateurs
@@ -52,39 +51,43 @@ public class Main {
 
         // Charger les salles
         System.out.println("Loading rooms...");
-        if (RoomManager.loadRooms()) {
+        if (!UserManager.getUsers().isEmpty()) { // Vérifiez si les utilisateurs ont été chargés
+            RoomManager.loadRooms(UserManager.getUsers());
             System.out.println("Rooms loaded successfully.");
         } else {
-            System.err.println("Failed to load rooms.");
+            System.err.println("Failed to load rooms: No users available.");
         }
         System.out.println("---------------------");
     }
 
-    public static void printData(){
-        System.out.println("-----PRINT-DATA------");
 
-        // Afficher les utilisateurs
+    public static void printDataLoaded() {
+        System.out.println("-----LOADED DATA------");
+
+        // Afficher les utilisateurs chargés
         System.out.println("Users:");
         UserManager.getUsers().forEach((name, user) -> {
-            System.out.println(" - " + name);
+            System.out.println(" - " + name + " (online: " + user.isOnline() + ")");
         });
-        System.out.println("---------------------");
-        // Afficher les salles et leurs fichiers associés
+
+        System.out.println("----------------------");
+
+        // Afficher les salles et leurs détails
         System.out.println("Rooms:");
         RoomManager.getRooms().forEach((roomName, room) -> {
             System.out.println(" - Room Name: " + roomName);
-            System.out.println("   Admin: " + room.getAdmin().getName());
+            System.out.println("   Admin: " + (room.getAdmin() != null ? room.getAdmin().getName() : "No admin"));
 
-            // Afficher les utilisateurs du fichier <roomName>_users.txt
-            File userFile = new File(roomName + "_users.txt");
-            if (userFile.exists()) {
-                System.out.println("   Users in Room (from file):");
-                List<String> usersInRoom = FileManager.loadFromFile(userFile.getName());
-                usersInRoom.forEach(user -> System.out.println("     - " + user));
-            } else {
-                System.out.println("   Users in Room: No file found.");
-            }
+            // Afficher les utilisateurs dans la salle
+            System.out.println("   Users in Room:");
+            room.getUsers().forEach(user -> System.out.println("     - " + user.getName()));
+
+            // Afficher les messages de la salle
+            System.out.println("   Messages:");
+            room.pullMessage().forEach(message -> System.out.println("     - " + message.getContent()));
         });
-        System.out.println("---------------------");
+
+        System.out.println("----------------------");
     }
+
 }

@@ -9,6 +9,7 @@ import ch.heigvd.dai.Types.User;
 import ch.heigvd.dai.commands.Command;
 
 import java.io.BufferedWriter;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,11 +42,13 @@ public class PullMessages implements Command {
             return ErrorCodes.USER_NOT_CONNECTED_TO_ROOM.getMessage();
         }
 
-        // Construit la réponse avec un StringBuilder
-        StringBuilder result = new StringBuilder("OK ");
-        for(Message msg : rooms.get(roomName).pullMessage()){
-            result.append(msg.getContent()).append(" ");
+        List<Message> msgs = RoomManager.pullMessagesFromRoom(roomName);
+        // Construire le contenu du message à partir des arguments
+        StringBuilder content = new StringBuilder("OK ");
+        for (Message msg : msgs) {
+            content.append(msg.getContent()).append(" ");
         }
-        return result.toString().trim();
+
+        return content.toString().trim();
     }
 }

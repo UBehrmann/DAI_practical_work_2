@@ -3,6 +3,7 @@ package ch.heigvd.dai.commands.connect;
 import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.RoomManager;
 import ch.heigvd.dai.Managers.UserManager;
+import ch.heigvd.dai.Types.Message;
 import ch.heigvd.dai.Types.Room;
 import ch.heigvd.dai.Types.User;
 import ch.heigvd.dai.commands.Command;
@@ -45,10 +46,11 @@ public class ConnectToRoom implements Command {
             return "OK";
         }
 
-        if(!RoomManager.addUserInRoom(rooms.get(roomName), users.get(userName))) {
+        if(!RoomManager.addUserToRoom(roomName, users.get(userName))) {
             return ErrorCodes.STORAGE_FAILED.getMessage();
         }
 
+        RoomManager.pushMessageToRoom(roomName, new Message(users.get(userName), "---Arrivée membre : " + userName));
         return "OK";
     }
 }

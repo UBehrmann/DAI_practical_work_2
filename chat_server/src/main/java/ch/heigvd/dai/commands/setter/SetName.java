@@ -1,5 +1,6 @@
 package ch.heigvd.dai.commands.setter;
 
+import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.UserManager;
 import ch.heigvd.dai.Types.User;
 import ch.heigvd.dai.commands.Command;
@@ -11,7 +12,7 @@ public class SetName implements Command {
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 4) {
-            return "ERROR 1 -Missing arguments"; // Missing arguments
+            return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
 
         String userName     = args[1];
@@ -20,26 +21,21 @@ public class SetName implements Command {
 
         Map<String, User> users = UserManager.getUsers();
         if (!users.containsKey(userName)) {
-            return "ERROR 2 -User name dosen't exist"; // User name dosen't exist
+            return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
         if(!users.get(userName).getPassword().equals(password)){
-            return "ERROR 3 -Wrong password"; //Wrong password
+            return ErrorCodes.PASSWORD_WRONG.getMessage();
         }
 
         if(users.containsKey(newUserName)){
-            return "ERROR 4 -New user name not available"; //New user name not available
+            return ErrorCodes.USER_ALREADY_EXISTS.getMessage();
         }
 
-        //Copier le user et changer son nom
-        User user = new User(users.get(userName));
-        user.setName(newUserName); // Modifier le nom
-
-        //Supprimer le user de la map
-        users.remove(userName);
-
-        //Ajouter le user modifié dans la mapo
-        users.put(newUserName, user);
+        // Changer le nom de l'utilisateur via UserManager
+        if (!UserManager.updateUserName(users.get(userName), newUserName)) {
+            return ErrorCodes.STORAGE_FAILED.getMessage();
+        }
 
         return "OK";
     }
