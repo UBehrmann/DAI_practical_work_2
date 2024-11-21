@@ -89,3 +89,28 @@ cmds_users_get_users_names_test =[
     "GET_USER_NAMES user5 myPrivateRoom",
 
 ]
+
+# USERS     :   user1, user2, user3, user4, user5
+# ONLINE    :   user1, user2, user3, user4, user5
+# ROOMS     :   myRoom (pwRm) -> user1, user2
+#               myPrivateRoom (pwPvRm) -> user3, user4, user5
+cmds_users_push_message_test =[
+    "PUSH_MESSAGE user6 myRoooom",
+    "PUSH_MESSAGE user6 myRoooom hello",
+
+    "CREATE_USER user6 pw6",  # Création d'utilisateur
+    "PUSH_MESSAGE user6 myRoooom hello",
+
+    "CONNECT_TO_SERVER user6 pw6",
+    "PUSH_MESSAGE user6 myRoooom hello",
+    "PUSH_MESSAGE user6 myRoom hello",
+
+    "CONNECT_TO_ROOM user6 myRoom pwRm",
+    "PUSH_MESSAGE user6 myRoom hello",
+    "PUSH_MESSAGE user1 myRoom hi",
+    "PUSH_MESSAGE user6 myRoom how are you ?",
+    "PUSH_MESSAGE user1 myRoom fine and you ?",
+    "PUSH_MESSAGE user6 myRoom yes, fine !",
+
+    "PULL_MESSAGES user6 myRoom",
+]

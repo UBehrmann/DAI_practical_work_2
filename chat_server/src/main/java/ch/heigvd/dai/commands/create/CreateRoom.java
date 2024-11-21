@@ -30,7 +30,7 @@ public class CreateRoom implements Command {
         }
 
         if(!users.get(creatorName).isOnline()){
-            return ErrorCodes.USER_NOT_CONNECTED.getMessage();
+            return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
         }
 
         Map<String, Room> rooms = RoomManager.getRooms();

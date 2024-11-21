@@ -7,7 +7,7 @@ import ch.heigvd.dai.commands.Command;
 import java.io.BufferedWriter;
 import java.util.Map;
 
-public class setName implements Command {
+public class SetPassword implements Command {
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 4) {
@@ -16,30 +16,26 @@ public class setName implements Command {
 
         String userName     = args[1];
         String password     = args[2];
-        String newUserName  = args[3];
+        String newPassword  = args[3];
 
         Map<String, User> users = UserManager.getUsers();
         if (!users.containsKey(userName)) {
-            return "ERROR 2 -User name dosen't exist"; // User name dosen't exist
+            return "ERROR 2 -User name dosen't exist"; //User name dosen't exist
         }
 
         if(!users.get(userName).getPassword().equals(password)){
             return "ERROR 3 -Wrong password"; //Wrong password
         }
 
-        if(users.containsKey(newUserName)){
-            return "ERROR 4 -New user name not available"; //New user name not available
-        }
-
-        //Copier le user et changer son nom
+        //Copier le user et changer son mot de passe
         User user = new User(users.get(userName));
-        user.setName(newUserName); // Modifier le nom
+        user.setPassword(newPassword); // Modifier le mot de passe
 
         //Supprimer le user de la map
         users.remove(userName);
 
-        //Ajouter le user modifié dans la mapo
-        users.put(newUserName, user);
+        //Ajouter le user modifié dans la map
+        users.put(userName, user);
 
         return "OK";
     }

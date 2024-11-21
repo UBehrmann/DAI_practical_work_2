@@ -18,9 +18,9 @@ public class Main {
     private static final String SERVER_NAME = "my_chat_tcp_server";
 
     public static void main(String[] args) {
-        loadDatas();
+        //loadDatas();
 
-        printData();
+        //printData();
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("[" + SERVER_NAME + " - " + SERVER_ID + "] starting with id " + SERVER_ID);

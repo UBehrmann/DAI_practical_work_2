@@ -16,7 +16,7 @@ public class Message {
         this.time.updateToCurrentSystemTime();
 
         // Création de l'en-tête
-        this.content = String.format("%s - %s - %s -> %s",
+        this.content = String.format("%s-%s-%s->%s",
                 this.date.getFullDate(),
                 this.time.getFullTime(),
                 editor.getName(),
