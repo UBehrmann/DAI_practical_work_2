@@ -13,7 +13,7 @@ import java.util.List;
 
 
 public class Main {
-    private static final int PORT = 1234;
+    private static final int PORT = 2001;
     private static final int SERVER_ID = (int) (Math.random() * 1000000);
     private static final String SERVER_NAME = "my_chat_tcp_server";
 

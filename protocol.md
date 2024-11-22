@@ -14,8 +14,9 @@ The transport protocol used is TCP, with the server listening on port 2001. Mess
 - [GET_ROOMS](#get_rooms)
 - [CONNECT_TO_ROOM](#connect_to_room)
 - [CREATE_ROOM](#create_room)
-- [GET_MESSAGES](#get_messages)
-- [SEND_MESSAGE](#send_message)
+- [PULL_MESSAGES](#pull_messages)
+- [PUSH_MESSAGE](#push_message)
+- [QUIT](#quit)
 
 ### CREATE_USER
 
@@ -183,6 +184,31 @@ GET_MESSAGES <applicantName> <roomName>
 ```text
 PUSH_MESSAGE <applicantName> <roomName> <content>
 ```
+
+#### response
+
+- `OK` - the message was sent successfully
+- `ERROR <code>` - an error occurred while sending the message. The error code is
+  an integer between 1 and 1 inclusive. The error code is as follow:
+  - `1` - the room does not exist
+  - `2` - the client is not connected to the room
+
+### QUIT
+
+Asks the server to disconnect the client and close the connection.
+
+#### request
+
+```text
+QUIT
+```
+
+#### response
+
+- `OK` - the client was disconnected successfully
+- `ERROR <code>` - an error occurred while disconnecting the client. The error code is
+  an integer between 1 and 1 inclusive. The error code is as follow:
+  - `1` - the client is not connected
 
 ## Diagram
 
