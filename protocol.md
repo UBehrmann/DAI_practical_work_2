@@ -34,14 +34,14 @@ CREATE_USER <name> <password>
   an integer between 1 and 1 inclusive. The error code is as follow:
   - `1` - the name is already taken
 
-### CONNECT
+### CONNECT_TO_SERVER
 
 Asks the server to connect the client. The client must provide a name and a password.
 
 #### request
 
 ```text
-CONNECT <name> <password>
+CONNECT_TO_SERVER <name> <password>
 ```
 
 #### response
@@ -58,7 +58,7 @@ Asks the server to set the name of the client. The client must provide a name.
 #### request
 
 ```text
-SET_NAME <name>
+SET_NAME <name> <password> <newName>
 ```
 
 #### response
@@ -75,7 +75,7 @@ Asks the server to set the password of the client. The client must provide the o
 #### request
 
 ```text
-SET_PASSWORD <old_password> <password>
+SET_PASSWORD <name> <password> <newPassword>
 ```
 
 #### response
@@ -85,14 +85,14 @@ SET_PASSWORD <old_password> <password>
   an integer between 1 and 1 inclusive. The error code is as follow:
   - `1` - the password cannot be empty
 
-### GET_NAMES
+### GET_USER_NAMES
 
 Asks the server to get the list of all the names of the users in a room. The client must provide the name of the room.
 
 #### request
 
 ```text
-GET_NAMES <room name>
+GET_USER_NAMES <applicantName> <roomName>
 ```
 
 #### response
@@ -102,14 +102,14 @@ GET_NAMES <room name>
   an integer between 1 and 1 inclusive. The error code is as follow:
   - `1` - the room does not exist
 
-### GET_ROOMS
+### GET_ROOM_NAMES
 
 Asks the server to get the list of all the rooms.
 
 #### request
 
 ```text
-GET_ROOMS
+GET_ROOM_NAMES <applicantName>
 ```
 
 #### response
@@ -126,7 +126,7 @@ Asks the server to connect the client to a room. If the room needs a password, t
 #### request
 
 ```text
-CONNECT_TO_ROOM <room name> <password>
+CONNECT_TO_ROOM <userName> <roomName> <password>
 ```
 
 #### response
@@ -146,7 +146,7 @@ If no password is provided, the room is created without a password.
 #### request
 
 ```text
-CREATE_ROOM <room name> <password>
+CREATE_ROOM <creatorName> <roomName> <roomPassword>
 ```
 
 #### response
@@ -156,7 +156,7 @@ CREATE_ROOM <room name> <password>
   an integer between 1 and 1 inclusive. The error code is as follow:
   - `1` - the room name is already taken
 
-### GET_MESSAGES
+### PULL_MESSAGES
 
 Asks the server to get the list of all the messages in a room. If the room needs a password, the client must provide it.
 
@@ -165,7 +165,7 @@ We decide to add the password to the request because otherwise someone could get
 #### request
 
 ```text
-GET_MESSAGES <room name> <password>
+GET_MESSAGES <applicantName> <roomName>
 ```
 
 #### response
@@ -175,6 +175,14 @@ GET_MESSAGES <room name> <password>
   an integer between 1 and 1 inclusive. The error code is as follow:
   - `1` - the room does not exist
   - `2` - the password is incorrect
+
+### PUSH_MESSAGE
+
+#### request
+
+```text
+PUSH_MESSAGE <applicantName> <roomName> <content>
+```
 
 ## Diagram
 
