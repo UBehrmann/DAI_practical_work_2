@@ -148,12 +148,12 @@ public class Client implements Callable<Integer> {
                     String password = args.length == 3 ? args[2] : "";
                     yield "CREATE_ROOM " + args[0] + " " + args[1] + " " + password + END_OF_LINE;
                 }
-                case "GET_MESSAGES" -> {
+                case "PULL_MESSAGES" -> {
                     if (args.length != 2) {
-                        System.out.println("[Client] Error: GET_MESSAGES requires <applicantName> <roomName>");
+                        System.out.println("[Client] Error: PULL_MESSAGES requires <applicantName> <roomName>");
                         yield null;
                     }
-                    yield "GET_MESSAGES " + args[0] + " " + args[1] + END_OF_LINE;
+                    yield "PULL_MESSAGES " + args[0] + " " + args[1] + END_OF_LINE;
                 }
                 case "PUSH_MESSAGE" -> {
                     if (args.length < 3) {
@@ -178,10 +178,16 @@ public class Client implements Callable<Integer> {
 
 
     private void processResponse(String response) {
-        if (response.startsWith("OK")) {
-            System.out.println("[Server] Success: " + response.substring(3));
-        } else if (response.startsWith("ERROR")) {
-            System.out.println("[Server] Error: " + response.substring(6));
+        if (response.startsWith("OK") || response.startsWith("ERROR")) {
+            String[] parts = response.split(" ", 2);
+            System.out.println("[Server] " + parts[0]); // Print "OK" or "ERROR"
+
+            if (parts.length > 1) {
+                String[] messages = parts[1].split("(?=\\d{2}/\\d{2}/\\d{4}-\\d{2}:\\d{2}:\\d{2}-)");
+                for (String message : messages) {
+                    System.out.println(message.trim());
+                }
+            }
         } else {
             System.out.println("[Server] " + response);
         }
@@ -197,7 +203,7 @@ public class Client implements Callable<Integer> {
         System.out.println("  GET_ROOM_NAMES - Get all room names.");
         System.out.println("  CONNECT_TO_ROOM <userName> <roomName> <password> - Connect to a chat room.");
         System.out.println("  CREATE_ROOM <creatorName> <roomName> <password> - Create a new chat room.");
-        System.out.println("  GET_MESSAGES <userName> <roomName> - Get messages from a chat room.");
+        System.out.println("  PULL_MESSAGES <userName> <roomName> - Get messages from a chat room.");
         System.out.println("  PUSH_MESSAGE <userName> <roomName> <content> - Send a message to a chat room.");
         System.out.println("  HELP - Show this help message.");
         System.out.println("  QUIT - Disconnect from the server and exit.");
