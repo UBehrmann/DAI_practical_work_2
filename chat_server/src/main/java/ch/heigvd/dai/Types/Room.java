@@ -45,7 +45,11 @@ public class Room {
     }
 
     public boolean isUserInRoom(User user) {
-        return this.admin.equals(user) || this.users.contains(user);
+        return isAdminInRoom(user) || this.users.contains(user);
+    }
+
+    public boolean isAdminInRoom(User user){
+        return this.admin.equals(user);
     }
 
     public String getName() {

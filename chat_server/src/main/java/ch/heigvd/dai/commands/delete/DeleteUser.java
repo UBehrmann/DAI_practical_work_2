@@ -33,6 +33,10 @@ public class DeleteUser implements Command {
         }
 
         for(Room room : RoomManager.getRooms().values()){
+            if(room.isAdminInRoom(user)){
+                RoomManager.removeRoom(room.getName());
+                continue;
+            }
             if(room.isUserInRoom(user)) RoomManager.removeUserFromRoom(room.getName(), user);
         }
 

@@ -38,13 +38,13 @@ public class CommandFactory {
         commandMap.put("PUSH_MESSAGE", PushMessage.class);
         commandMap.put("PULL_MESSAGES", PullMessages.class);
 
-        //EN ATTENTE DE TEST
         commandMap.put("QUIT_SERVER", QuitServer.class);
         commandMap.put("QUIT_ROOM", QuitRoom.class);
 
         commandMap.put("DELETE_USER", DeleteUser.class);
         commandMap.put("DELETE_ROOM", DeleteRoom.class);
 
+        //EN ATTENTE DE TEST
         // Ajouter d'autres commandes ici
     }
 

@@ -1,7 +1,0 @@
-admin: user3
-users: user5, user4
-messages:
-21/11/2024 15:19:45: 21/11/2024-15:19:45-user3->---Création du room : myPrivateRoom
-21/11/2024 15:19:45: 21/11/2024-15:19:45-user3->---Admin du room : user3
-21/11/2024 15:19:47: 21/11/2024-15:19:47-user5->---Arrivée membre : user5
-21/11/2024 15:19:47: 21/11/2024-15:19:47-user4->---Arrivée membre : user4
