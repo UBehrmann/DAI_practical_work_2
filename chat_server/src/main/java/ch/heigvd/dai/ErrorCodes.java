@@ -11,10 +11,11 @@ public enum ErrorCodes {
 
     ROOM_NOT_FOUND("ERROR 5 -Room name dosen't existe"),
     ROOM_ALREADY_EXISTS("ERROR 6 -Room name already taken"),
+    ROOM_USER_NOT_ADMIN("ERROR 7 -User isn't admin"),
 
-    PASSWORD_WRONG("ERROR 7 -Wrong password"),
+    PASSWORD_WRONG("ERROR 8 -Wrong password"),
 
-    STORAGE_FAILED("ERROR 7 -Failed to store, please try again");
+    STORAGE_FAILED("ERROR 9 -Failed to store, please try again");
 
     private final String message;
 

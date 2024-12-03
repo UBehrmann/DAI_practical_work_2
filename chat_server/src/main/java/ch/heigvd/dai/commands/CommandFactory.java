@@ -4,10 +4,14 @@ import ch.heigvd.dai.commands.connect.ConnectToRoom;
 import ch.heigvd.dai.commands.connect.ConnectToServer;
 import ch.heigvd.dai.commands.create.CreateRoom;
 import ch.heigvd.dai.commands.create.CreateUser;
+import ch.heigvd.dai.commands.delete.DeleteRoom;
+import ch.heigvd.dai.commands.delete.DeleteUser;
 import ch.heigvd.dai.commands.getter.GetUserNames;
 import ch.heigvd.dai.commands.getter.GetRoomNames;
 import ch.heigvd.dai.commands.messages.PullMessages;
 import ch.heigvd.dai.commands.messages.PushMessage;
+import ch.heigvd.dai.commands.quit.QuitRoom;
+import ch.heigvd.dai.commands.quit.QuitServer;
 import ch.heigvd.dai.commands.setter.SetName;
 import ch.heigvd.dai.commands.setter.SetPassword;
 
@@ -31,18 +35,16 @@ public class CommandFactory {
         commandMap.put("GET_ROOM_NAMES", GetRoomNames.class);
         commandMap.put("GET_USER_NAMES", GetUserNames.class);
 
-        //EN ATTENTE DE TEST
         commandMap.put("PUSH_MESSAGE", PushMessage.class);
         commandMap.put("PULL_MESSAGES", PullMessages.class);
 
-        //EN ATTENTE DE CREATION + TESTS
+        commandMap.put("QUIT_SERVER", QuitServer.class);
+        commandMap.put("QUIT_ROOM", QuitRoom.class);
 
-        // commandMap.put("LEAVE_ROOM", ...);
-        // commandMap.put("LEAVE_SERVER", ...);
+        commandMap.put("DELETE_USER", DeleteUser.class);
+        commandMap.put("DELETE_ROOM", DeleteRoom.class);
 
-        // commandMap.put("DELETE_ROOM", ...);
-        // commandMap.put("DELETE_USER", ...);
-
+        //EN ATTENTE DE TEST
         // Ajouter d'autres commandes ici
     }
 

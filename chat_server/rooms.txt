@@ -1,2 +1,0 @@
-myRoom pwRm
-myPrivateRoom pwPvRm
