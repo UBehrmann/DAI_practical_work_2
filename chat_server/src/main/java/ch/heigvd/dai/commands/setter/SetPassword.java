@@ -9,6 +9,9 @@ import java.io.BufferedWriter;
 import java.util.Map;
 
 public class SetPassword implements Command {
+    //-------------------------------------------------------
+    //SET_PASSWORD <userName> <password> <newPassword>
+    //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 4) {
@@ -24,12 +27,12 @@ public class SetPassword implements Command {
             return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
-        if(!users.get(userName).getPassword().equals(password)){
-            return ErrorCodes.PASSWORD_WRONG.getMessage();
+        User user = users.get(userName);
+        if(!user.isPasswordCorrect(password)){
+            return ErrorCodes.USER_WRONG_PASSWORD.getMessage();
         }
 
-        // Changer le mot de passe via UserManager
-        if (!UserManager.updateUserPassword(users.get(userName), newPassword)) {
+        if (!UserManager.updateUserPassword(userName, newPassword)) {
             return ErrorCodes.STORAGE_FAILED.getMessage();
         }
 

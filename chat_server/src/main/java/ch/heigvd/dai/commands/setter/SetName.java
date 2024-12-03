@@ -9,12 +9,14 @@ import java.io.BufferedWriter;
 import java.util.Map;
 
 public class SetName implements Command {
+    //-------------------------------------------------------
+    //SET_NAME <userName> <password> <newUserName>
+    //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 4) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
-
         String userName     = args[1];
         String password     = args[2];
         String newUserName  = args[3];
@@ -24,16 +26,16 @@ public class SetName implements Command {
             return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
-        if(!users.get(userName).getPassword().equals(password)){
-            return ErrorCodes.PASSWORD_WRONG.getMessage();
+        User user = users.get(userName);
+        if(!user.isPasswordCorrect(password)){
+            return ErrorCodes.USER_WRONG_PASSWORD.getMessage();
         }
 
         if(users.containsKey(newUserName)){
             return ErrorCodes.USER_ALREADY_EXISTS.getMessage();
         }
 
-        // Changer le nom de l'utilisateur via UserManager
-        if (!UserManager.updateUserName(users.get(userName), newUserName)) {
+        if (!UserManager.updateUserName(userName, newUserName)) {
             return ErrorCodes.STORAGE_FAILED.getMessage();
         }
 

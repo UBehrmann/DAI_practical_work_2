@@ -20,7 +20,6 @@ public class QuitServer implements Command {
         String userName = args[1];
 
         Map<String, User> users = UserManager.getUsers();
-
         if (!users.containsKey(userName)) {
             return ErrorCodes.USER_NOT_FOUND.getMessage();
         }

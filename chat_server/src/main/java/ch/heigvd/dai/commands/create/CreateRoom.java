@@ -15,12 +15,14 @@ import java.io.IOException;
 
 
 public class CreateRoom implements Command {
+    //-------------------------------------------------------
+    //CREATE_ROOM <creatorName> <roomName> <roomPassword>
+    //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 4) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
-
         String creatorName  = args[1];
         String roomName     = args[2];
         String roomPassword = args[3];
@@ -30,7 +32,8 @@ public class CreateRoom implements Command {
             return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
-        if(!users.get(creatorName).isOnline()){
+        User user = users.get(creatorName);
+        if(!user.isOnline()){
             return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
         }
 
@@ -39,12 +42,12 @@ public class CreateRoom implements Command {
             return ErrorCodes.ROOM_ALREADY_EXISTS.getMessage();
         }
 
-        if(!RoomManager.addRoom(new Room(roomName, roomPassword, users.get(creatorName)))){
+        if(!RoomManager.addRoom(new Room(roomName, roomPassword, user))){
             return ErrorCodes.STORAGE_FAILED.getMessage();
         }
 
-        RoomManager.pushMessageToRoom(roomName, new Message(users.get(creatorName), "---Création du room : " + roomName));
-        RoomManager.pushMessageToRoom(roomName, new Message(users.get(creatorName), "---Admin du room : " + creatorName));
+        RoomManager.pushMessageToRoom(roomName, new Message(user, "---Création du room : " + roomName));
+        RoomManager.pushMessageToRoom(roomName, new Message(user, "---Admin du room : " + creatorName));
         return "OK";
     }
 }

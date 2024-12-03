@@ -167,12 +167,12 @@ cmds_users_delete_room_test =[
     "QUIT_SERVER user6",
 
     "DELETE_ROOM user6",
-    "DELETE_ROOM user9 myRoom88",
-    "DELETE_ROOM user6 myRoom88",
+    "DELETE_ROOM user9 pw9 myRoom88",
+    "DELETE_ROOM user6 pw6 myRoom88",
     "CONNECT_TO_SERVER user6 pw6",
-    "DELETE_ROOM user6 myRoom88",
-    "DELETE_ROOM user6 myRoom8",
-    "DELETE_ROOM user8 myRoom8",
+    "DELETE_ROOM user6 pw6 myRoom88",
+    "DELETE_ROOM user6 pw6 myRoom8",
+    "DELETE_ROOM user8 pw8 myRoom8",
     "GET_ROOM_NAMES user8",
 ]
 
@@ -182,22 +182,26 @@ cmds_users_delete_room_test =[
 #               myPrivateRoom (pwPvRm) -> user3, user4, user5
 cmds_users_delete_user_test =[
     "DELETE_USER",
-    "DELETE_USER user9",
+    "DELETE_USER user9 pw9",
 
-    "DELETE_USER user7",
+    "DELETE_USER user7 pw7",
     "GET_USER_NAMES user6 myRoom",
     "GET_USER_NAMES user5 myPrivateRoom",
 
-    "DELETE_USER user8",
+    "DELETE_USER user8 pw8",
     "GET_USER_NAMES user6 myRoom",
     "GET_USER_NAMES user5 myPrivateRoom",
 
-    "DELETE_USER user4",
+    "DELETE_USER user4 pw4",
     "GET_USER_NAMES user6 myRoom",
     "GET_USER_NAMES user5 myPrivateRoom",
 
-    "DELETE_USER user1",
+    "DELETE_USER user1 pw1",
     "GET_USER_NAMES user6 myRoom",
     "GET_USER_NAMES user5 myPrivateRoom",
 ]
+
+# USERS     :   user2, user3, user5, user6
+# ONLINE    :   user2, user3, user5, user6
+# ROOMS     :   myPrivateRoom (pwPvRm) -> user3, user5
 
