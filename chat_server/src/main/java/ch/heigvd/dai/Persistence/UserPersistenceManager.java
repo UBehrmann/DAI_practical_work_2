@@ -1,8 +1,7 @@
-package ch.heigvd.dai.Managers;
+package ch.heigvd.dai.Persistence;
 
 import ch.heigvd.dai.Types.User;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 

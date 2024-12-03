@@ -12,16 +12,17 @@ import java.util.Map;
 
 public class DeleteRoom implements Command {
     //-------------------------------------------------------
-    //DELETE_ROOM <applicantName> <roomName>
+    //DELETE_ROOM <applicantName> <passwordApplicant> <roomName> <passwordRoom>
     //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
-        if (args.length < 3) {
+        if (args.length < 5) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
-
         String userName = args[1];
-        String roomName = args[2];
+        String userPassword = args[2];
+        String roomName = args[3];
+        String roomPassword = args[4];
 
         Map<String, User> users = UserManager.getUsers();
         if (!users.containsKey(userName)) {
@@ -33,12 +34,20 @@ public class DeleteRoom implements Command {
             return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
         }
 
+        if(!user.isPasswordCorrect(userPassword)){
+            return ErrorCodes.USER_WRONG_PASSWORD.getMessage();
+        }
+
         Map<String, Room> rooms = RoomManager.getRooms();
         if (!rooms.containsKey(roomName)) {
             return ErrorCodes.ROOM_NOT_FOUND.getMessage();
         }
 
         Room room = rooms.get(roomName);
+        if(!room.isPasswordCorrect(roomPassword)){
+            return ErrorCodes.ROOM_WRONG_PASSWORD.getMessage();
+        }
+
         if(!room.isUserInRoom(user)){
             return ErrorCodes.USER_NOT_CONNECTED_TO_ROOM.getMessage();
         }

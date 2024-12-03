@@ -1,5 +1,6 @@
 package ch.heigvd.dai.Managers;
 
+import ch.heigvd.dai.Persistence.UserPersistenceManager;
 import ch.heigvd.dai.Types.User;
 
 import java.util.Map;
@@ -24,25 +25,28 @@ public class UserManager {
         }
         return false;
     }
-    public static synchronized boolean removeUser(User user) {
-        if (!users.containsKey(user.getName())) return false;
-        users.remove(user.getName());
-        return persistenceManager.deleteUser(user.getName());
+    public static synchronized boolean removeUser(String userName) {
+        if (!users.containsKey(userName)) return false;
+        users.remove(userName);
+        return persistenceManager.deleteUser(userName);
     }
-    public static synchronized boolean updateUserName(User user, String newUserName) {
+    public static synchronized boolean updateUserName(String userName, String newUserName) {
         if (users.containsKey(newUserName)) return false;
-        users.remove(user.getName());
-        if(!persistenceManager.deleteUser(user.getName())) return false;
+        if (!users.containsKey(userName)) return false;
+        if(!persistenceManager.deleteUser(userName)) return false;
+
+        User user = users.remove(userName);
         user.setName(newUserName);
         users.put(newUserName, user);
         return persistenceManager.saveUser(user);
     }
-    public static synchronized boolean updateUserPassword(User user, String newPassword) {
-        if (!users.containsKey(user.getName())) return false;
-        users.remove(user.getName());
-        if(!persistenceManager.deleteUser(user.getName())) return false;
+    public static synchronized boolean updateUserPassword(String userName, String newPassword) {
+        if (!users.containsKey(userName)) return false;
+        if(!persistenceManager.deleteUser(userName)) return false;
+
+        User user = users.remove(userName);
         user.setPassword(newPassword);
-        users.put(user.getName(), user);
+        users.put(userName, user);
         return persistenceManager.saveUser(user);
     }
 

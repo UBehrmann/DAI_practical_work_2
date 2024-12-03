@@ -22,7 +22,6 @@ public class PullMessages implements Command {
         if (args.length < 3) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
-
         String userName = args[1];
         String roomName = args[2];
 
@@ -30,7 +29,9 @@ public class PullMessages implements Command {
         if (!users.containsKey(userName)) {
             return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
-        if(!users.get(userName).isOnline()){
+
+        User user = users.get(userName);
+        if(!user.isOnline()){
             return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
         }
 
@@ -38,12 +39,13 @@ public class PullMessages implements Command {
         if (!rooms.containsKey(roomName)) {
             return ErrorCodes.ROOM_NOT_FOUND.getMessage();
         }
-        if(!rooms.get(roomName).isUserInRoom(users.get(userName))){
+
+        Room room = rooms.get(roomName);
+        if(!room.isUserInRoom(user)){
             return ErrorCodes.USER_NOT_CONNECTED_TO_ROOM.getMessage();
         }
 
         List<Message> msgs = RoomManager.pullMessagesFromRoom(roomName);
-        // Construire le contenu du message à partir des arguments
         StringBuilder content = new StringBuilder("OK ");
         for (Message msg : msgs) {
             content.append(msg.getContent()).append(" ");

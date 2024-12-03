@@ -11,26 +11,28 @@ import java.io.BufferedWriter;
 import java.util.Map;
 
 public class ConnectToServer implements Command {
+    //-------------------------------------------------------
+    //CONNECT_TO_SERVER <userName> <password>
+    //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 3) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
-
         String userName = args[1];
         String password = args[2];
 
         Map<String, User> users = UserManager.getUsers();
-
         if (!users.containsKey(userName)) {
             return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
-        if(!users.get(userName).isPasswordCorrect(password)){
-            return ErrorCodes.PASSWORD_WRONG.getMessage();
+        User user = users.get(userName);
+        if(!user.isPasswordCorrect(password)){
+            return ErrorCodes.USER_WRONG_PASSWORD.getMessage();
         }
 
-        users.get(userName).setOnline(true);
+        user.setOnline(true);
         return "OK";
     }
 }

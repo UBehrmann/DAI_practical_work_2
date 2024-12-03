@@ -20,7 +20,6 @@ public class PushMessage implements Command {
         if (args.length < 4) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
-
         String userName = args[1];
         String roomName = args[2];
 
@@ -28,7 +27,9 @@ public class PushMessage implements Command {
         if (!users.containsKey(userName)) {
             return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
-        if(!users.get(userName).isOnline()){
+
+        User user = users.get(userName);
+        if(!user.isOnline()){
             return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
         }
 
@@ -36,7 +37,9 @@ public class PushMessage implements Command {
         if (!rooms.containsKey(roomName)) {
             return ErrorCodes.ROOM_NOT_FOUND.getMessage();
         }
-        if(!rooms.get(roomName).isUserInRoom(users.get(userName))){
+
+        Room room = rooms.get(roomName);
+        if(!room.isUserInRoom(user)){
             return ErrorCodes.USER_NOT_CONNECTED_TO_ROOM.getMessage();
         }
 
@@ -46,9 +49,10 @@ public class PushMessage implements Command {
             content.append(args[i]).append(" ");
         }
 
-        if(!RoomManager.pushMessageToRoom(roomName, new Message(users.get(userName), content.toString().trim()))){
+        if(!RoomManager.pushMessageToRoom(roomName, new Message(user, content.toString().trim()))){
             return ErrorCodes.STORAGE_FAILED.getMessage();
         }
+
         return "OK";
     }
 }

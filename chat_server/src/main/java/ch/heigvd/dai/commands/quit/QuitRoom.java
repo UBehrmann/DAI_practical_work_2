@@ -19,7 +19,6 @@ public class QuitRoom implements Command {
         if (args.length < 3) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
-
         String userName = args[1];
         String roomName = args[2];
 
