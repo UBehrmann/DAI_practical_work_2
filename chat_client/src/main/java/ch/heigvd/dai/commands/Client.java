@@ -278,23 +278,7 @@ public class Client implements Callable<Integer> {
     }
 
     private void processResponse(String response) {
-        if (!response.startsWith("OK") && !response.startsWith("ERROR")) {
-            System.out.println("[Server] " + response);
-        } else {
-            String[] parts = response.split(" ", 2);
-            System.out.println("[Server] " + parts[0]);
-            if (parts.length > 1) {
-                String[] messages = parts[1].split("(?=\\d{2}/\\d{2}/\\d{4}-\\d{2}:\\d{2}:\\d{2}-)");
-                String[] var4 = messages;
-                int var5 = messages.length;
-
-                for(int var6 = 0; var6 < var5; ++var6) {
-                    String message = var4[var6];
-                    System.out.println(message.trim());
-                }
-            }
-        }
-
+        System.out.println("[Server] " + response);
     }
 
     private static void printHelp() {
