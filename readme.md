@@ -7,6 +7,8 @@
 
 ## Introduction / purpose
 
+You can find the purpose of the project in the separate file which also describes the protocol and gives an overview of the project.
+
 [Application protocol](protocol.md)
 
 ## How to use the applications
