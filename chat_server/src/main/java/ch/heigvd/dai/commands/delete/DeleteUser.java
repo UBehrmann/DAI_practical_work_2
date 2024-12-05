@@ -1,4 +1,4 @@
-package ch.heigvd.dai.commands.connect;
+package ch.heigvd.dai.commands.delete;
 
 import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.RoomManager;
@@ -10,15 +10,16 @@ import ch.heigvd.dai.commands.Command;
 import java.io.BufferedWriter;
 import java.util.Map;
 
-public class ConnectToServer implements Command {
+public class DeleteUser implements Command {
     //-------------------------------------------------------
-    //CONNECT_TO_SERVER <userName> <password>
+    //DELETE_USER <applicantName> <passwordApplicant>
     //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
-        if (args.length < 3) {
+        if (args.length < 3){
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
+
         String userName = args[1];
         String password = args[2];
 
@@ -28,11 +29,23 @@ public class ConnectToServer implements Command {
         }
 
         User user = users.get(userName);
+        if(!user.isOnline()){
+            return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
+        }
+
         if(!user.isPasswordCorrect(password)){
             return ErrorCodes.USER_WRONG_PASSWORD.getMessage();
         }
 
-        user.setOnline(true);
+        for(Room room : RoomManager.getRooms().values()){
+            if(room.isAdminInRoom(user)){
+                RoomManager.removeRoom(room.getName());
+                continue;
+            }
+            if(room.isUserInRoom(user)) RoomManager.removeUserFromRoom(room.getName(), user);
+        }
+
+        UserManager.removeUser(userName);
         return "OK";
     }
 }

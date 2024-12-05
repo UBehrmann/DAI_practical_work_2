@@ -1,4 +1,4 @@
-package ch.heigvd.dai.commands.connect;
+package ch.heigvd.dai.commands.quit;
 
 import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.RoomManager;
@@ -10,9 +10,9 @@ import ch.heigvd.dai.commands.Command;
 import java.io.BufferedWriter;
 import java.util.Map;
 
-public class ConnectToServer implements Command {
+public class QuitRoom implements Command {
     //-------------------------------------------------------
-    //CONNECT_TO_SERVER <userName> <password>
+    //QUIT_ROOM <applicantName> <roomName>
     //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
@@ -20,7 +20,7 @@ public class ConnectToServer implements Command {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
         String userName = args[1];
-        String password = args[2];
+        String roomName = args[2];
 
         Map<String, User> users = UserManager.getUsers();
         if (!users.containsKey(userName)) {
@@ -28,11 +28,21 @@ public class ConnectToServer implements Command {
         }
 
         User user = users.get(userName);
-        if(!user.isPasswordCorrect(password)){
-            return ErrorCodes.USER_WRONG_PASSWORD.getMessage();
+        if(!user.isOnline()){
+            return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
         }
 
-        user.setOnline(true);
+        Map<String, Room> rooms = RoomManager.getRooms();
+        if (!rooms.containsKey(roomName)) {
+            return ErrorCodes.ROOM_NOT_FOUND.getMessage();
+        }
+
+        Room room = rooms.get(roomName);
+        if(!room.isUserInRoom(user)){
+            return ErrorCodes.USER_NOT_CONNECTED_TO_ROOM.getMessage();
+        }
+
+        RoomManager.removeUserFromRoom(roomName, user);
         return "OK";
     }
 }

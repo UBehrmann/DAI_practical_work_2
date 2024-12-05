@@ -1,29 +1,28 @@
-package ch.heigvd.dai.commands.messages;
+package ch.heigvd.dai.commands.delete;
 
 import ch.heigvd.dai.ErrorCodes;
 import ch.heigvd.dai.Managers.RoomManager;
 import ch.heigvd.dai.Managers.UserManager;
-import ch.heigvd.dai.Types.Message;
 import ch.heigvd.dai.Types.Room;
 import ch.heigvd.dai.Types.User;
 import ch.heigvd.dai.commands.Command;
 
 import java.io.BufferedWriter;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class PullMessages implements Command {
+public class DeleteRoom implements Command {
     //-------------------------------------------------------
-    //PULL_MESSAGES <applicantName> <roomName>
+    //DELETE_ROOM <applicantName> <passwordApplicant> <roomName> <passwordRoom>
     //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
-        if (args.length < 3) {
+        if (args.length < 5) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
         String userName = args[1];
-        String roomName = args[2];
+        String userPassword = args[2];
+        String roomName = args[3];
+        String roomPassword = args[4];
 
         Map<String, User> users = UserManager.getUsers();
         if (!users.containsKey(userName)) {
@@ -35,22 +34,29 @@ public class PullMessages implements Command {
             return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
         }
 
+        if(!user.isPasswordCorrect(userPassword)){
+            return ErrorCodes.USER_WRONG_PASSWORD.getMessage();
+        }
+
         Map<String, Room> rooms = RoomManager.getRooms();
         if (!rooms.containsKey(roomName)) {
             return ErrorCodes.ROOM_NOT_FOUND.getMessage();
         }
 
         Room room = rooms.get(roomName);
+        if(!room.isPasswordCorrect(roomPassword)){
+            return ErrorCodes.ROOM_WRONG_PASSWORD.getMessage();
+        }
+
         if(!room.isUserInRoom(user)){
             return ErrorCodes.USER_NOT_CONNECTED_TO_ROOM.getMessage();
         }
 
-        List<Message> msgs = RoomManager.pullMessagesFromRoom(roomName);
-        StringBuilder content = new StringBuilder("OK ");
-        for (Message msg : msgs) {
-            content.append(msg.getContent()).append(" ");
+        if(user != room.getAdmin()){
+            return ErrorCodes.ROOM_USER_NOT_ADMIN.getMessage();
         }
 
-        return content.toString().trim();
+        RoomManager.removeRoom(roomName);
+        return "OK";
     }
 }

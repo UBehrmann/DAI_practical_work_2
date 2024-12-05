@@ -13,11 +13,13 @@ public class ClientHandler implements Runnable {
     private final int server_id;
 
     private final String client_id;
+    private final String prompt;
 
-    public ClientHandler(Socket socket, int server_id) {
+    public ClientHandler(Socket socket, int server_id, String prompt) {
         this.socket     = socket;
         this.server_id  = server_id;
         this.client_id  = this.socket.getInetAddress().getHostAddress() + ":" + this.socket.getPort();
+        this.prompt     = prompt;
     }
 
     @Override
@@ -26,14 +28,12 @@ public class ClientHandler implements Runnable {
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
              BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8))) {
 
-            System.out.println( ">" + server_id + " : " +  "NEW CLIENT : connected from "
-                                + client_id);
+            System.out.println(prompt +  "NEW CLIENT : connected from -> " + client_id);
 
 
             String request;
             while ((request = in.readLine()) != null) {
-                System.out.println( ">" + server_id + "+" + client_id + " : "
-                                    + "Received request -> " + request); // Log la commande reçue
+                System.out.println(prompt + "Received request -> " + request); // Log la commande reçue
 
                 String[] parts = request.trim().split(" ");
                 String action = parts[0].toUpperCase();
@@ -51,11 +51,9 @@ public class ClientHandler implements Runnable {
                 out.flush();
             }
 
-            System.out.println( ">" + server_id + "+" + client_id + " : "
-                                + "closing connection");
+            System.out.println(prompt + "closing connection");
         } catch (IOException e) {
-            System.out.println( ">" + server_id + "+" + client_id + " : "
-                                + "exception: " + e);
+            System.out.println(prompt + "exception -> " + e);
         }
     }
 }

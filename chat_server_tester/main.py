@@ -4,7 +4,9 @@ import time
 import cmds
 from cmds import cmds_users_create, cmds_users_set_name_test, cmds_users_set_password_test, \
     cmds_users_connect_to_server_test, cmds_users_create_room_test, cmds_users_connect_to_room_test, \
-    cmds_users_get_room_names_test, cmds_users_get_users_names_test, cmds_users_push_message_test
+    cmds_users_get_room_names_test, cmds_users_get_users_names_test, cmds_users_push_message_test, \
+    cmds_users_quit_room_test, cmds_users_quit_server_test, cmds_users_delete_room_test, \
+    cmds_users_delete_user_test
 
 
 def send_command(client_id, host, port, command):
@@ -63,3 +65,11 @@ if __name__ == "__main__":
     simulate_clients(host="127.0.0.1", port=1234, commands=cmds_users_get_users_names_test)
     print("\n\n")
     simulate_clients(host="127.0.0.1", port=1234, commands=cmds_users_push_message_test)
+    print("\n\n")
+    simulate_clients(host="127.0.0.1", port=1234, commands=cmds_users_quit_room_test)
+    print("\n\n")
+    simulate_clients(host="127.0.0.1", port=1234, commands=cmds_users_quit_server_test)
+    print("\n\n")
+    simulate_clients(host="127.0.0.1", port=1234, commands=cmds_users_delete_room_test)
+    print("\n\n")
+    simulate_clients(host="127.0.0.1", port=1234, commands=cmds_users_delete_user_test)

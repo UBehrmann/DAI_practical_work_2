@@ -1,5 +1,6 @@
 package ch.heigvd.dai.Managers;
 
+import ch.heigvd.dai.Persistence.RoomPersistenceManager;
 import ch.heigvd.dai.Types.Message;
 import ch.heigvd.dai.Types.Room;
 import ch.heigvd.dai.Types.User;
@@ -24,8 +25,8 @@ public class RoomManager {
         return persistenceManager.saveRoomInfo(room) && persistenceManager.saveRoomData(room);
     }
     public static synchronized boolean removeRoom(String roomName) {
-        Room room = rooms.remove(roomName);
-        if (room == null) return false;
+        if(!rooms.containsKey(roomName)) return false;
+        rooms.remove(roomName);
         boolean roomInfoDeleted = persistenceManager.deleteRoomInfo(roomName);
         boolean roomDataDeleted = persistenceManager.deleteRoomData(roomName);
         return roomInfoDeleted && roomDataDeleted;

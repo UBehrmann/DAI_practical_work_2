@@ -14,12 +14,14 @@ import java.util.Map;
 
 
 public class ConnectToRoom implements Command {
+    //-------------------------------------------------------
+    //CONNECT_TO_ROOM <userName> <roomName> <roomPassword>
+    //-------------------------------------------------------
     @Override
     public String execute(String[] args, BufferedWriter out) {
         if (args.length < 4) {
             return ErrorCodes.MISSING_ARGUMENTS.getMessage();
         }
-
         String userName = args[1];
         String roomName = args[2];
         String password = args[3];
@@ -29,7 +31,8 @@ public class ConnectToRoom implements Command {
             return ErrorCodes.USER_NOT_FOUND.getMessage();
         }
 
-        if(!users.get(userName).isOnline()){
+        User user = users.get(userName);
+        if(!user.isOnline()){
             return ErrorCodes.USER_NOT_CONNECTED_TO_SERVER.getMessage();
         }
 
@@ -38,19 +41,20 @@ public class ConnectToRoom implements Command {
             return ErrorCodes.ROOM_NOT_FOUND.getMessage();
         }
 
-        if(!rooms.get(roomName).isPasswordCorrect(password)){
-            return ErrorCodes.PASSWORD_WRONG.getMessage();
+        Room room = rooms.get(roomName);
+        if(!room.isPasswordCorrect(password)){
+            return ErrorCodes.ROOM_WRONG_PASSWORD.getMessage();
         }
 
-        if(rooms.get(roomName).isUserInRoom(users.get(userName))){
+        if(room.isUserInRoom(user)){
             return "OK";
         }
 
-        if(!RoomManager.addUserToRoom(roomName, users.get(userName))) {
+        if(!RoomManager.addUserToRoom(roomName, user)) {
             return ErrorCodes.STORAGE_FAILED.getMessage();
         }
 
-        RoomManager.pushMessageToRoom(roomName, new Message(users.get(userName), "---Arrivée membre : " + userName));
+        RoomManager.pushMessageToRoom(roomName, new Message(user, "---Arrivée membre : " + userName));
         return "OK";
     }
 }

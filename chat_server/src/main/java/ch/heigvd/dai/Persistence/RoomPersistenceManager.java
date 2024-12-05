@@ -1,5 +1,6 @@
-package ch.heigvd.dai.Managers;
+package ch.heigvd.dai.Persistence;
 
+import ch.heigvd.dai.Managers.UserManager;
 import ch.heigvd.dai.Types.Message;
 import ch.heigvd.dai.Types.Room;
 import ch.heigvd.dai.Types.User;
@@ -113,11 +114,13 @@ public class RoomPersistenceManager {
                     if (metaParts.length == 3) {
                         String editorName = metaParts[2].trim();
                         User editor = users.get(editorName);
-                        if (editor != null) {
-                            room.pushMessage(new Message(editor, parts[1].trim()));
-                        } else {
-                            System.err.println("Message editor " + editorName + " not found in users list.");
+                        if (editor == null) {
+                            // Utilisateur introuvable, créer un utilisateur fictif
+                            System.err.println("Message editor " + editorName + " not found in users list. Creating placeholder user.");
+                            editor = new User(editorName, "deleted-user");
+                            editor.setOnline(false);
                         }
+                        room.pushMessage(new Message(editor, parts[1].trim()));
                     }
                 }
             }
