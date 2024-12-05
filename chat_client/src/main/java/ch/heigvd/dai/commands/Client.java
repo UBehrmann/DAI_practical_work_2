@@ -237,9 +237,33 @@ public class Client implements Callable<Integer> {
                         var10000 = "PUSH_MESSAGE " + args[0] + " " + args[1] + " " + content + END_OF_LINE;
                     }
                     break;
-                case "QUIT":
-                    var10000 = "QUIT" + END_OF_LINE;
-                    break;
+                case "QUIT_ROOM":
+                    if (args.length != 2) {
+                        System.out.println("[Client] Error: QUIT_ROOM requires <applicantName> <roomName>");
+                        return null;
+                    }
+                    return "QUIT_ROOM " + args[0] + " " + args[1] + END_OF_LINE;
+                case "QUIT_SERVER":
+                    if (args.length != 1) {
+                        System.out.println("[Client] Error: QUIT_SERVER requires <userName>");
+                        return null;
+                    }
+                    return "QUIT_SERVER " + args[0] + END_OF_LINE;
+                case "DELETE_USER":
+                    if (args.length != 2) {
+                        System.out.println("[Client] Error: DELETE_USER requires <applicantName> <passwordApplicant>");
+                        return null;
+                    }
+                    return "DELETE_USER " + args[0] + " " + args[1] + END_OF_LINE;
+                case "DELETE_ROOM":
+                    if (args.length != 4) {
+                        System.out.println("[Client] Error: DELETE_ROOM requires <applicantName> <passwordApplicant> <roomName> <roomPassword>");
+                        return null;
+                    }
+                    return "DELETE_ROOM " + args[0] + " " + args[1] + " " + args[2] + " " + args[3] + END_OF_LINE;
+                case "HELP":
+                    printHelp();
+                    return null;
                 default:
                     System.out.println("[Client] Unknown command. Type HELP for a list of commands.");
                     var10000 = null;
@@ -279,13 +303,17 @@ public class Client implements Callable<Integer> {
         System.out.println("  CONNECT_TO_SERVER <name> <password> - Connect to the server.");
         System.out.println("  SET_NAME <currentName> <password> <newName> - Change the username.");
         System.out.println("  SET_PASSWORD <name> <currentPassword> <newPassword> - Change the password.");
-        System.out.println("  GET_USER_NAMES <roomName> - Get user names in a room.");
-        System.out.println("  GET_ROOM_NAMES - Get all room names.");
-        System.out.println("  CONNECT_TO_ROOM <userName> <roomName> <password> - Connect to a chat room.");
-        System.out.println("  CREATE_ROOM <creatorName> <roomName> <password> - Create a new chat room.");
+        System.out.println("  GET_USER_NAMES <applicantName> <roomName> - Get user names in a room.");
+        System.out.println("  GET_ROOM_NAMES <applicantName> - Get all room names.");
+        System.out.println("  CONNECT_TO_ROOM <userName> <roomName> [<password>] - Connect to a chat room.");
+        System.out.println("  CREATE_ROOM <creatorName> <roomName> [<password>] - Create a new chat room.");
         System.out.println("  PULL_MESSAGES <userName> <roomName> - Get messages from a chat room.");
         System.out.println("  PUSH_MESSAGE <userName> <roomName> <content> - Send a message to a chat room.");
+        System.out.println("  QUIT_ROOM <applicantName> <roomName> - Quit a chat room.");
+        System.out.println("  QUIT_SERVER <userName> - Disconnect from the server.");
+        System.out.println("  DELETE_USER <applicantName> <passwordApplicant> - Delete a user.");
+        System.out.println("  DELETE_ROOM <applicantName> <passwordApplicant> <roomName> <roomPassword> - Delete a chat room.");
         System.out.println("  HELP - Show this help message.");
-        System.out.println("  QUIT - Disconnect from the server and exit.");
     }
+
 }
