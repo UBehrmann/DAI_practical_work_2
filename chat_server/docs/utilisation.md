@@ -45,6 +45,14 @@ docker run -d -p 1234:1234 --name chat_server_container chat_server --port 1234 
 ```bash
 docker run -d -p 5678:5678 --name chat_server_container chat_server --port 5678 --name custom_server --load true
 ```
+5. Arreter le conteneur
+```bash
+docker stop chat_server_container
+```
+6. Lancer le conteneur
+```bash
+docker start chat_server_container
+```
 5. Lister les Conteneur actifs
 ```bash
 docker ps
